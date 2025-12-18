@@ -92,11 +92,11 @@ export function AppLayout({ children }: AppLayoutProps) {
         <SidebarRail />
       </Sidebar>
       <SidebarInset>
-        <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
+        <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4 sticky top-0 bg-background z-20">
           <SidebarTrigger className="-ml-1" />
           <div className="flex-1" />
         </header>
-        <main className="flex-1 overflow-auto">
+        <main className="flex-1 overflow-auto p-0">
           {children}
         </main>
       </SidebarInset>

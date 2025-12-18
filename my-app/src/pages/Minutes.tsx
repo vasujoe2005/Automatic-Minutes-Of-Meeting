@@ -99,10 +99,8 @@ const recentActionItems = [
 
 export default function Minutes() {
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      
-      <main className="container py-8">
+    <div className="w-full">
+      <main className="container py-8 px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between mb-8">
           <div>
             <h1 className="font-display text-3xl font-bold">Minutes of Meeting</h1>
@@ -110,7 +108,7 @@ export default function Minutes() {
               AI-generated meeting minutes and action items
             </p>
           </div>
-          
+
           <div className="flex gap-3">
             <div className="relative">
               <Input
@@ -140,20 +138,18 @@ export default function Minutes() {
                 <CardContent className="p-0">
                   <div className="flex items-center justify-between p-4">
                     <div className="flex items-center gap-4">
-                      <div className={`h-12 w-12 rounded-xl flex items-center justify-center ${
-                        mom.status === "approved"
+                      <div className={`h-12 w-12 rounded-xl flex items-center justify-center ${mom.status === "approved"
                           ? "bg-success/10"
                           : mom.status === "pending"
-                          ? "bg-warning/10"
-                          : "bg-muted"
-                      }`}>
-                        <FileText className={`h-5 w-5 ${
-                          mom.status === "approved"
+                            ? "bg-warning/10"
+                            : "bg-muted"
+                        }`}>
+                        <FileText className={`h-5 w-5 ${mom.status === "approved"
                             ? "text-success"
                             : mom.status === "pending"
-                            ? "text-warning"
-                            : "text-muted-foreground"
-                        }`} />
+                              ? "text-warning"
+                              : "text-muted-foreground"
+                          }`} />
                       </div>
                       <div>
                         <h3 className="font-semibold">{mom.title}</h3>
@@ -177,14 +173,14 @@ export default function Minutes() {
                           <Badge variant="accent">{mom.decisions} decisions</Badge>
                         </div>
                       </div>
-                      
-                      <Badge 
+
+                      <Badge
                         variant={
-                          mom.status === "approved" 
-                            ? "success" 
-                            : mom.status === "pending" 
-                            ? "warning" 
-                            : "muted"
+                          mom.status === "approved"
+                            ? "success"
+                            : mom.status === "pending"
+                              ? "warning"
+                              : "muted"
                         }
                         className="capitalize"
                       >
@@ -250,9 +246,8 @@ export default function Minutes() {
                     className="p-3 rounded-lg bg-muted/50 hover:bg-muted transition-colors"
                   >
                     <div className="flex items-start gap-3">
-                      <div className={`h-5 w-5 rounded-full flex items-center justify-center mt-0.5 ${
-                        item.status === "in-progress" ? "bg-warning/20" : "bg-muted"
-                      }`}>
+                      <div className={`h-5 w-5 rounded-full flex items-center justify-center mt-0.5 ${item.status === "in-progress" ? "bg-warning/20" : "bg-muted"
+                        }`}>
                         {item.status === "in-progress" ? (
                           <Clock className="h-3 w-3 text-warning" />
                         ) : (

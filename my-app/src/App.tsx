@@ -46,9 +46,7 @@ const App = () => (
               path="/meeting-room"
               element={
                 <ProtectedRoute>
-                  <AppLayout>
-                    <MeetingRoom />
-                  </AppLayout>
+                  <MeetingRoom />
                 </ProtectedRoute>
               }
             />

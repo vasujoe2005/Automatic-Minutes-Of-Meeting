@@ -88,10 +88,8 @@ const meetings = [
 
 export default function Meetings() {
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      
-      <main className="container py-8">
+    <div className="w-full">
+      <main className="container py-8 px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between mb-8">
           <div>
             <h1 className="font-display text-3xl font-bold">Meetings</h1>
@@ -99,7 +97,7 @@ export default function Meetings() {
               View and manage all your meetings
             </p>
           </div>
-          
+
           <div className="flex gap-3">
             <div className="relative">
               <Input
@@ -135,16 +133,14 @@ export default function Meetings() {
               <CardContent className="p-0">
                 <div className="flex items-center justify-between p-4">
                   <div className="flex items-center gap-4">
-                    <div className={`h-14 w-14 rounded-xl flex items-center justify-center ${
-                      meeting.status === "upcoming" 
-                        ? "bg-primary/10" 
+                    <div className={`h-14 w-14 rounded-xl flex items-center justify-center ${meeting.status === "upcoming"
+                        ? "bg-primary/10"
                         : "bg-muted"
-                    }`}>
-                      <Video className={`h-6 w-6 ${
-                        meeting.status === "upcoming" 
-                          ? "text-primary" 
+                      }`}>
+                      <Video className={`h-6 w-6 ${meeting.status === "upcoming"
+                          ? "text-primary"
                           : "text-muted-foreground"
-                      }`} />
+                        }`} />
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
@@ -172,7 +168,7 @@ export default function Meetings() {
 
                   <div className="flex items-center gap-3">
                     <Badge variant="secondary">{meeting.department}</Badge>
-                    
+
                     {meeting.status === "completed" && (
                       <div className="flex items-center gap-2">
                         {meeting.hasMoM && (

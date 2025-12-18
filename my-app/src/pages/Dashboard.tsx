@@ -59,8 +59,8 @@ export default function Dashboard() {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
-      <main className="container py-8">
+    <div className="w-full">
+      <main className="container py-8 px-4 sm:px-6 lg:px-8">
         {/* Welcome Section */}
         <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between mb-8">
           <div>

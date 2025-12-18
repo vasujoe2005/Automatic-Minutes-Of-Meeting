@@ -56,10 +56,8 @@ export default function Schedule() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      
-      <main className="container py-8">
+    <div className="w-full">
+      <main className="container py-8 px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
           <h1 className="font-display text-3xl font-bold">Schedule Meeting</h1>
           <p className="text-muted-foreground mt-1">

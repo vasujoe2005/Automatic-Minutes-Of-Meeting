@@ -1,0 +1,26 @@
+fastapi
+uvicorn[standard]
+sqlalchemy
+alembic
+asyncpg
+psycopg2-binary
+pydantic
+pydantic-settings
+python-jose[cryptography]
+passlib[bcrypt]
+bcrypt==3.2.2
+python-multipart
+email-validator
+python-socketio
+celery
+redis
+fastapi-mail
+requests
+openai
+python-dotenv
+
+# Testing dependencies
+pytest
+pytest-asyncio
+httpx
+aiosqlite

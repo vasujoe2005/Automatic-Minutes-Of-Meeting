@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.api.v1.endpoints import auth, meetings, recordings, users
+from app.api.v1.endpoints import auth, meetings, recordings, users, templates
 
 api_router = APIRouter()
 
@@ -14,3 +14,11 @@ api_router.include_router(recordings.router, prefix="/recordings", tags=["record
 
 # Include users endpoints
 api_router.include_router(users.router, prefix="/users", tags=["users"])
+
+# Include templates endpoints
+# Include templates endpoints
+api_router.include_router(templates.router, prefix="/templates", tags=["templates"])
+
+# Include AI endpoints
+from app.api.v1.endpoints import ai
+api_router.include_router(ai.router, prefix="/ai", tags=["ai"])

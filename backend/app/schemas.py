@@ -70,8 +70,9 @@ class ActionItemBase(BaseModel):
 
 class MeetingCreateWithTemplate(BaseModel):
     title: str
-    template_id: int
+    template_id: int | None = None
     start_time: datetime | None = None
+    invite_emails: list[EmailStr] | None = None
 
 class AgendaItemUpdate(BaseModel):
     status: str | None = None # pending, in_progress, completed, deferred

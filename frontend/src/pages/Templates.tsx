@@ -303,12 +303,23 @@ export default function Templates() {
                                 <p className="text-sm font-medium mb-2">Agenda Structure:</p>
                                 <div className="bg-muted p-3 rounded-md text-sm text-muted-foreground">
                                     <ul className="list-disc list-inside">
-                                        {JSON.parse(template.structure).slice(0, 3).map((item: string, i: number) => (
-                                            <li key={i}>{item}</li>
-                                        ))}
-                                        {JSON.parse(template.structure).length > 3 && (
-                                            <li className="list-none text-xs mt-1 italic">...and {JSON.parse(template.structure).length - 3} more</li>
-                                        )}
+                                        {(() => {
+                                            try {
+                                                const items = JSON.parse(template.structure);
+                                                return (
+                                                    <>
+                                                        {items.slice(0, 3).map((item: string, i: number) => (
+                                                            <li key={i}>{item}</li>
+                                                        ))}
+                                                        {items.length > 3 && (
+                                                            <li className="list-none text-xs mt-1 italic">...and {items.length - 3} more</li>
+                                                        )}
+                                                    </>
+                                                );
+                                            } catch (e) {
+                                                return <li>Error parsing structure</li>;
+                                            }
+                                        })()}
                                     </ul>
                                 </div>
                             </CardContent>

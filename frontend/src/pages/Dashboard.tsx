@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Header } from "@/components/layout/Header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { toast } from "sonner";
 import {
   Video,
   Plus,
@@ -113,10 +114,63 @@ export default function Dashboard() {
     },
   ];
 
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate type
+    if (!file.type.startsWith('audio/')) {
+      toast.error("Please upload an audio file (MP3, WAV, etc.)");
+      return;
+    }
+
+    const token = localStorage.getItem("token");
+    if (!token) {
+      toast.error("Authentication required");
+      return;
+    }
+
+    setIsLoading(true);
+    toast.info("Uploading and processing audio...");
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("title", file.name.split('.')[0]);
+
+    try {
+      const res = await fetch("/api/v1/meetings/quick-generate", {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}` },
+        body: formData
+      });
+
+      if (res.ok) {
+        toast.success("Minutes generated successfully!");
+        const data = await res.json();
+        // Allow time for toast to be seen
+        setTimeout(() => navigate("/minutes"), 1000);
+      } else {
+        const err = await res.json();
+        toast.error(`Failed: ${err.detail || "Server Error"}`);
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Upload failed. Check console.");
+    } finally {
+      setIsLoading(false);
+      // Reset input
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  };
+
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-4">
+        <Loader2 className="h-12 w-12 animate-spin text-primary" />
+        <p className="text-muted-foreground animate-pulse">Generating Minutes of Meeting...</p>
       </div>
     );
   }
@@ -126,6 +180,17 @@ export default function Dashboard() {
       <Header />
 
       <main className="container py-8">
+        {/* ... (Welcome Section) ... */}
+
+        {/* Hidden Input */}
+        <input
+          type="file"
+          ref={fileInputRef}
+          className="hidden"
+          accept="audio/*"
+          onChange={handleFileUpload}
+        />
+
         {/* Welcome Section */}
         <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between mb-8">
           <div>
@@ -296,31 +361,42 @@ export default function Dashboard() {
             </Card>
           </Link>
 
+          {/* Quick Generate Upload */}
+          <Card variant="interactive" className="p-6 cursor-pointer" onClick={() => fileInputRef.current?.click()}>
+            <div className="flex items-center gap-4">
+              <div className="h-12 w-12 rounded-xl bg-gradient-accent flex items-center justify-center">
+                {isLoading ? <Loader2 className="h-6 w-6 animate-spin text-accent-foreground" /> : <FileText className="h-6 w-6 text-accent-foreground" />}
+              </div>
+              <div>
+                <h3 className="font-semibold">Upload Audio</h3>
+                <p className="text-sm text-muted-foreground">Directly generate Minutes from file</p>
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  id="audio-upload"
+                  accept="audio/*"
+                  className="hidden"
+                  onChange={handleFileUpload}
+                />
+              </div>
+            </div>
+          </Card>
+
           <Link to="/templates">
             <Card variant="interactive" className="p-6">
               <div className="flex items-center gap-4">
-                <div className="h-12 w-12 rounded-xl bg-gradient-accent flex items-center justify-center">
-                  <FileText className="h-6 w-6 text-accent-foreground" />
+                {/* ... (existing template card content) ... */}
+                {/* Reusing existing design but fixing layout if needed */}
+                <div className="h-12 w-12 rounded-xl bg-success/20 flex items-center justify-center">
+                  <Users className="h-6 w-6 text-success" />
                 </div>
                 <div>
-                  <h3 className="font-semibold">Create Agenda</h3>
-                  <p className="text-sm text-muted-foreground">AI-powered agenda templates</p>
+                  <h3 className="font-semibold">Templates</h3>
+                  <p className="text-sm text-muted-foreground">Manage agenda templates</p>
                 </div>
               </div>
             </Card>
           </Link>
-
-          <Card variant="interactive" className="p-6">
-            <div className="flex items-center gap-4">
-              <div className="h-12 w-12 rounded-xl bg-success/20 flex items-center justify-center">
-                <Users className="h-6 w-6 text-success" />
-              </div>
-              <div>
-                <h3 className="font-semibold">Invite Team</h3>
-                <p className="text-sm text-muted-foreground">Add team members easily</p>
-              </div>
-            </div>
-          </Card>
         </div>
       </main>
     </div>

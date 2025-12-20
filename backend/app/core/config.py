@@ -6,6 +6,7 @@ from urllib.parse import quote_plus
 class Settings(BaseSettings):
     PROJECT_NAME: str = "Online Meeting Web App"
     API_V1_STR: str = "/api/v1"
+    FRONTEND_URL: str = "http://localhost:8081"
     
     # Database
     POSTGRES_USER: str

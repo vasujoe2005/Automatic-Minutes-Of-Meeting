@@ -19,6 +19,7 @@ class Meeting(Base):
     id = Column(Integer, primary_key=True, index=True)
     host_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     meeting_code = Column(String, unique=True, index=True, nullable=False)
+    title = Column(String, nullable=True) # Added title field
     start_time = Column(DateTime, nullable=True)
     end_time = Column(DateTime, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
@@ -26,18 +27,22 @@ class Meeting(Base):
     # New Fields
     template_id = Column(Integer, ForeignKey("agenda_templates.id"), nullable=True)
     status = Column(String, default="scheduled") # scheduled, in_progress, completed, finalized
+    language = Column(String, default="en") # en, es, fr, etc.
 
     host = relationship("User", back_populates="meetings")
     # template = relationship("AgendaTemplate") # Optional backref
     
     recordings = relationship("Recording", back_populates="meeting")
-    transcript = relationship("Transcript", uselist=False, back_populates="meeting")
+    recordings = relationship("Recording", back_populates="meeting")
+    # transcript = relationship("Transcript", uselist=False, back_populates="meeting") # Removed old
     summary = relationship("Summary", uselist=False, back_populates="meeting")
     
     # New component relations
     agenda_items = relationship("MeetingAgendaItem", back_populates="meeting")
     action_items = relationship("ActionItem", back_populates="meeting")
     decisions = relationship("Decision", back_populates="meeting")
+    invitations = relationship("MeetingInvitation", back_populates="meeting")
+    transcripts = relationship("Transcript", back_populates="meeting")
 
 class Recording(Base):
     __tablename__ = "recordings"
@@ -48,14 +53,7 @@ class Recording(Base):
 
     meeting = relationship("Meeting", back_populates="recordings")
 
-class Transcript(Base):
-    __tablename__ = "transcripts"
-    id = Column(Integer, primary_key=True, index=True)
-    meeting_id = Column(Integer, ForeignKey("meetings.id"), nullable=False)
-    content = Column(Text, nullable=False)
-    created_at = Column(DateTime, default=datetime.utcnow)
 
-    meeting = relationship("Meeting", back_populates="transcript")
 
 class Summary(Base):
     __tablename__ = "summaries"
@@ -65,6 +63,8 @@ class Summary(Base):
     key_points = Column(Text, nullable=True)
     action_items = Column(Text, nullable=True)
     decisions = Column(Text, nullable=True)
+    formatted_report = Column(Text, nullable=True)
+
     created_at = Column(DateTime, default=datetime.utcnow)
 
     meeting = relationship("Meeting", back_populates="summary")
@@ -119,6 +119,17 @@ class ActionItem(Base):
     meeting = relationship("Meeting", back_populates="action_items")
     # agenda_item = relationship("MeetingAgendaItem") # Optional link
 
+class MeetingInvitation(Base):
+    __tablename__ = "meeting_invitations"
+    id = Column(Integer, primary_key=True, index=True)
+    meeting_id = Column(Integer, ForeignKey("meetings.id"), nullable=False)
+    email = Column(String, nullable=False)
+    token = Column(String, unique=True, index=True, nullable=False)
+    status = Column(String, default="pending") # pending, sent, viewed, accepted, declined
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    meeting = relationship("Meeting", back_populates="invitations")
+
 class Decision(Base):
     __tablename__ = "decisions"
     id = Column(Integer, primary_key=True, index=True)
@@ -131,4 +142,16 @@ class Decision(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
     
     meeting = relationship("Meeting", back_populates="decisions")
+
+class Transcript(Base):
+    __tablename__ = "transcripts"
+    id = Column(Integer, primary_key=True, index=True)
+    meeting_id = Column(Integer, ForeignKey("meetings.id"), nullable=False)
+    
+    sender_name = Column(String, nullable=False)
+    text = Column(Text, nullable=False)
+    language = Column(String, default="en")
+    timestamp = Column(DateTime, default=datetime.utcnow)
+    
+    meeting = relationship("Meeting", back_populates="transcripts")
 

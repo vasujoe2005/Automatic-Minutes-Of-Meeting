@@ -18,6 +18,11 @@ export default defineConfig(({ mode }) => ({
         ws: true,
         changeOrigin: true,
       },
+      '/ws': {
+        target: 'http://localhost:8000',
+        ws: true,
+        changeOrigin: true,
+      },
     },
   },
   plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),

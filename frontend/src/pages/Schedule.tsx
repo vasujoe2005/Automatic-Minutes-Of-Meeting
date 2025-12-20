@@ -101,22 +101,23 @@ export default function Schedule() {
         body: JSON.stringify({
           title: meetingTitle,
           template_id: selectedTemplate?.id || null,
-          start_time: start_time
+          start_time: start_time,
+          invite_emails: participants ? participants.split(",").map(e => e.trim()).filter(e => e) : []
         })
       });
 
       if (response.ok) {
         const data = await response.json();
         toast.success("Meeting scheduled successfully!");
-        // Navigate to meeting room or dashboard? 
-        // For demo flow, let's go to Meeting Room with the code (simulating 'starting' it, or just dashboard)
-        // But real flow: Dashboard -> Click Join. 
         navigate("/dashboard");
       } else {
-        toast.error("Failed to schedule meeting");
+        const errorData = await response.json();
+        console.error("Schedule error:", errorData);
+        toast.error(`Failed: ${errorData.detail || "Unknown error"}`);
       }
-    } catch (e) {
-      toast.error("Error scheduling meeting");
+    } catch (e: any) {
+      console.error(e);
+      toast.error(`Error scheduling: ${e.message || e.toString()}`);
     }
   };
 
@@ -186,6 +187,19 @@ export default function Schedule() {
                       <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     </div>
                   </div>
+                </div>
+
+                <div className="space-y-2 pt-4 border-t">
+                  <Label htmlFor="participants">Invite Participants</Label>
+                  <Input
+                    id="participants"
+                    placeholder="Enter emails separated by comma (e.g. alice@example.com, bob@example.com)"
+                    value={participants}
+                    onChange={(e) => setParticipants(e.target.value)}
+                  />
+                  <p className="text-[10px] text-muted-foreground">
+                    We will send an invitation with the agenda and join link.
+                  </p>
                 </div>
               </CardContent>
             </Card>
